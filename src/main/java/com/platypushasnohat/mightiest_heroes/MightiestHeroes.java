@@ -1,10 +1,12 @@
 package com.platypushasnohat.mightiest_heroes;
 
+import com.platypushasnohat.mightiest_heroes.registry.HeroItemProperties;
 import com.platypushasnohat.mightiest_heroes.registry.HeroItems;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 
 import java.util.Locale;
 
@@ -20,5 +22,10 @@ public class MightiestHeroes {
     public MightiestHeroes(IEventBus modEventBus, ModContainer modContainer) {
         HeroItems.ITEMS.register(modEventBus);
         MightiestHeroesTab.CREATIVE_MODE_TABS.register(modEventBus);
+        modEventBus.addListener(this::clientSetup);
+    }
+
+    private void clientSetup(FMLClientSetupEvent event) {
+        event.enqueueWork(HeroItemProperties::registerItemProperties);
     }
 }

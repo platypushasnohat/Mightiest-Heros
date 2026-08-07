@@ -31,5 +31,13 @@
             "translation": [0, 0, -0.5],
             "scale": [1.5, 1.5, 1.5]
         }
-    }
+    },
+    "overrides": [
+        {
+            "predicate": {
+                "blocking": 1
+            },
+            "model": "mightiest_heroes:item/vibranium_shield_blocking"
+        }
+    ]
 }
