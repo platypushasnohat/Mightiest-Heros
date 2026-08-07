@@ -1,0 +1,35 @@
+{
+    "parent": "builtin/entity",
+    "gui_light": "front",
+    "textures": {
+        "particle": "minecraft:block/iron_block"
+    },
+    "display": {
+        "thirdperson_righthand": {
+            "rotation": [0, -90, 0],
+            "translation": [2.25, -2, 5]
+        },
+        "thirdperson_lefthand": {
+            "rotation": [0, -90, 0],
+            "translation": [2.25, -2, 5]
+        },
+        "firstperson_righthand": {
+            "translation": [2, -3.5, 0]
+        },
+        "firstperson_lefthand": {
+            "translation": [2, -3.5, 0]
+        },
+        "ground": {
+            "translation": [0, 3, 0],
+            "scale": [0.25, 0.25, 0.25]
+        },
+        "gui": {
+            "rotation": [15, 135, 5],
+            "scale": [0.725, 0.725, 0.725]
+        },
+        "fixed": {
+            "translation": [0, 0, -0.5],
+            "scale": [1.5, 1.5, 1.5]
+        }
+    }
+}

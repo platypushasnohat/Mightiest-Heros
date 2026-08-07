@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "com.platypushasnohat.mightiest_heroes.mixins",
+  "compatibilityLevel": "JAVA_21",
+  "refmap": "mightiest_heroes.refmap.json",
+  "mixins": [],
+  "client": [],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}
