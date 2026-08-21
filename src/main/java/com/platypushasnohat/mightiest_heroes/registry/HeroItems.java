@@ -17,6 +17,9 @@ public class HeroItems {
 
     public static final DeferredItem<Item> VIBRANIUM_SHIELD = registerItem("vibranium_shield", () -> new VibraniumShieldItem(new Item.Properties().durability(945)));
 
+    public static final DeferredItem<Item> RAW_VIBRANIUM = registerItem("raw_vibranium", () -> new Item(new Item.Properties()));
+    public static final DeferredItem<Item> VIBRANIUM_INGOT = registerItem("vibranium_ingot", () -> new Item(new Item.Properties()));
+
     private static <I extends Item> DeferredItem<I> registerItem(String name, Supplier<? extends I> supplier) {
         DeferredItem<I> item = ITEMS.register(name, supplier);
         ITEM_TRANSLATIONS.add(item);
