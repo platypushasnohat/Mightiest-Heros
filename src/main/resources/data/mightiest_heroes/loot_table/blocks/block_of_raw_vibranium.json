@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "mightiest_heroes:block_of_raw_vibranium"
+        }
+      ],
+      "rolls": 1
+    }
+  ],
+  "random_sequence": "mightiest_heroes:blocks/block_of_raw_vibranium"
+}

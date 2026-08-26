@@ -11,7 +11,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:block_of_raw_vibranium"
+          "name": "mightiest_heroes:block_of_vibranium"
         }
       ],
       "rolls": 1
