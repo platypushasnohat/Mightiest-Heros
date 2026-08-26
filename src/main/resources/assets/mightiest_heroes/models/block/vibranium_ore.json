@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "mightiest_heroes:block/vibranium_ore"
+  }
+}

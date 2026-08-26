@@ -1,5 +1,6 @@
 package com.platypushasnohat.mightiest_heroes;
 
+import com.platypushasnohat.mightiest_heroes.registry.HeroBlocks;
 import com.platypushasnohat.mightiest_heroes.registry.HeroItemProperties;
 import com.platypushasnohat.mightiest_heroes.registry.HeroItems;
 import net.minecraft.resources.ResourceLocation;
@@ -21,6 +22,7 @@ public class MightiestHeroes {
 
     public MightiestHeroes(IEventBus modEventBus, ModContainer modContainer) {
         HeroItems.ITEMS.register(modEventBus);
+        HeroBlocks.BLOCKS.register(modEventBus);
         MightiestHeroesTab.CREATIVE_MODE_TABS.register(modEventBus);
         modEventBus.addListener(this::clientSetup);
     }
