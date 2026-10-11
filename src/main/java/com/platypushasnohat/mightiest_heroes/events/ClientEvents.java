@@ -1,11 +1,16 @@
 package com.platypushasnohat.mightiest_heroes.events;
 
 import com.platypushasnohat.mightiest_heroes.MightiestHeroes;
+import com.platypushasnohat.mightiest_heroes.client.models.SuperSoldierArmorModel;
 import com.platypushasnohat.mightiest_heroes.client.models.VibraniumShieldModel;
 import com.platypushasnohat.mightiest_heroes.client.renderer.VibraniumShieldRenderer;
 import com.platypushasnohat.mightiest_heroes.registry.HeroItems;
 import com.platypushasnohat.mightiest_heroes.registry.HeroModelLayers;
+import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -23,9 +28,14 @@ public class ClientEvents {
             public BlockEntityWithoutLevelRenderer getCustomRenderer() {
                 return VibraniumShieldRenderer.INSTANCE;
             }
-        },
-                HeroItems.VIBRANIUM_SHIELD
-        );
+        }, HeroItems.VIBRANIUM_SHIELD);
+
+        event.registerItem(new IClientItemExtensions() {
+            @Override
+            public HumanoidModel<?> getHumanoidArmorModel(LivingEntity entity, ItemStack stack, EquipmentSlot slot, HumanoidModel<?> properties) {
+                return SuperSoldierArmorModel.INSTANCE;
+            }
+        }, HeroItems.SUPER_SOLDIER_MASK, HeroItems.SUPER_SOLDIER_CHESTPLATE, HeroItems.SUPER_SOLDIER_LEGGINGS, HeroItems.SUPER_SOLDIER_BOOTS);
     }
 
 
