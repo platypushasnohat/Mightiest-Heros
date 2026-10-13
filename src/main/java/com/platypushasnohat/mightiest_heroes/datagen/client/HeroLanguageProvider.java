@@ -18,5 +18,7 @@ public class HeroLanguageProvider extends SinewLanguageProvider {
         this.addCreativeTab(MightiestHeroesTab.MIGHTIEST_HEROES_TAB.get(), "Mightiest Heroes");
         HeroItems.ITEM_TRANSLATIONS.forEach(this::forItem);
         HeroBlocks.BLOCK_TRANSLATIONS.forEach(this::forBlock);
+
+        this.add(HeroItems.DISABLED_VIBRANIUM_SHIELD.get(), "Vibranium Shield");
     }
 }

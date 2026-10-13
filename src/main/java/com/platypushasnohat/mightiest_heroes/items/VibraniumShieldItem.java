@@ -1,7 +1,10 @@
 package com.platypushasnohat.mightiest_heroes.items;
 
 import com.platypushasnohat.mightiest_heroes.entity.VibraniumShield;
+import com.platypushasnohat.mightiest_heroes.registry.HeroItems;
+import com.platypushasnohat.sinew.item.DisabledItem;
 import com.platypushasnohat.sinew.utils.SinewSoundUtils;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -41,8 +44,10 @@ public class VibraniumShieldItem extends Item implements Equipable {
         ItemStack stack = player.getItemInHand(hand);
         if (stack.getDamageValue() >= stack.getMaxDamage() - 1) {
             player.getCooldowns().addCooldown(stack.getItem(), 10);
+            return InteractionResultHolder.pass(stack);
         } else if (player.isShiftKeyDown()) {
             player.startUsingItem(hand);
+            return InteractionResultHolder.pass(stack);
         } else {
             int slot = player.getInventory().selected;
             if (hand == InteractionHand.OFF_HAND) {
@@ -54,21 +59,20 @@ public class VibraniumShieldItem extends Item implements Equipable {
                 VibraniumShield shield = new VibraniumShield(level, position.x, position.y, position.z);
                 shield.setOwner(player);
                 shield.setItem(stack);
-                shield.setReturnTime(12);
-                shield.setDamage(12.0F);
+                shield.setReturnTime(15);
+                shield.setDamage(10.0F);
                 shield.setSlot(slot);
                 shield.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 1.5F, 0.0F);
                 level.addFreshEntity(shield);
-//                if (player instanceof ServerPlayer serverPlayer) {
-//                    DisabledItem.disableItem(serverPlayer, slot, OFItems.DISABLED_LASER_BLADE);
-//                }
+                if (player instanceof ServerPlayer serverPlayer) {
+                    DisabledItem.disableItem(serverPlayer, slot, HeroItems.DISABLED_VIBRANIUM_SHIELD);
+                }
                 level.playSound(null, shield.blockPosition(), SoundEvents.EGG_THROW, SoundSource.PLAYERS, 1.0F, SinewSoundUtils.randomizePitch(level));
             }
             player.awardStat(Stats.ITEM_USED.get(stack.getItem()));
             player.swing(hand, true);
             return InteractionResultHolder.success(stack);
         }
-        return InteractionResultHolder.sidedSuccess(stack, level.isClientSide);
     }
 
     @Override

@@ -2,7 +2,6 @@ package com.platypushasnohat.mightiest_heroes.events;
 
 import com.platypushasnohat.mightiest_heroes.MightiestHeroes;
 import com.platypushasnohat.mightiest_heroes.client.models.SuperSoldierArmorModel;
-import com.platypushasnohat.mightiest_heroes.client.models.VibraniumShieldItemModel;
 import com.platypushasnohat.mightiest_heroes.client.models.VibraniumShieldModel;
 import com.platypushasnohat.mightiest_heroes.client.renderer.VibraniumShieldItemRenderer;
 import com.platypushasnohat.mightiest_heroes.client.renderer.VibraniumShieldRenderer;
@@ -48,7 +47,6 @@ public class ClientEvents {
 
     @SubscribeEvent
     public static void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
-        event.registerLayerDefinition(HeroModelLayers.VIBRANIUM_SHIELD_ITEM, VibraniumShieldItemModel::createBodyLayer);
         event.registerLayerDefinition(HeroModelLayers.VIBRANIUM_SHIELD, VibraniumShieldModel::createBodyLayer);
     }
 }

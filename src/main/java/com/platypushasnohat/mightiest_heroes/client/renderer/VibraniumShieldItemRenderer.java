@@ -27,7 +27,7 @@ public class VibraniumShieldItemRenderer extends BlockEntityWithoutLevelRenderer
 
 	public VibraniumShieldItemRenderer(BlockEntityRenderDispatcher dispatcher, EntityModelSet modelSet) {
 		super(dispatcher, modelSet);
-		this.vibraniumShieldItemModel = new VibraniumShieldItemModel(modelSet.bakeLayer(HeroModelLayers.VIBRANIUM_SHIELD_ITEM));
+		this.vibraniumShieldItemModel = new VibraniumShieldItemModel(modelSet.bakeLayer(HeroModelLayers.VIBRANIUM_SHIELD));
 	}
 
 	@Override

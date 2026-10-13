@@ -24,7 +24,8 @@ public class HeroItemModelProvider extends SinewItemModelProvider {
                 HeroItems.SUPER_SOLDIER_MASK,
                 HeroItems.SUPER_SOLDIER_CHESTPLATE,
                 HeroItems.SUPER_SOLDIER_LEGGINGS,
-                HeroItems.SUPER_SOLDIER_BOOTS
+                HeroItems.SUPER_SOLDIER_BOOTS,
+                HeroItems.DISABLED_VIBRANIUM_SHIELD
         );
 
         for (Item item : BuiltInRegistries.ITEM) {
