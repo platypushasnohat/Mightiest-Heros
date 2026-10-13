@@ -3,10 +3,7 @@ package com.platypushasnohat.mightiest_heroes;
 import com.platypushasnohat.mightiest_heroes.datagen.client.HeroItemModelProvider;
 import com.platypushasnohat.mightiest_heroes.datagen.client.HeroLanguageProvider;
 import com.platypushasnohat.mightiest_heroes.datagen.client.HeroSoundDefinitionsProvider;
-import com.platypushasnohat.mightiest_heroes.registry.HeroArmorMaterials;
-import com.platypushasnohat.mightiest_heroes.registry.HeroBlocks;
-import com.platypushasnohat.mightiest_heroes.registry.HeroItemProperties;
-import com.platypushasnohat.mightiest_heroes.registry.HeroItems;
+import com.platypushasnohat.mightiest_heroes.registry.*;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
@@ -33,6 +30,7 @@ public class MightiestHeroes {
     public MightiestHeroes(IEventBus modEventBus, ModContainer modContainer) {
         HeroItems.ITEMS.register(modEventBus);
         HeroBlocks.BLOCKS.register(modEventBus);
+        HeroEntities.ENTITY_TYPE.register(modEventBus);
         HeroArmorMaterials.ARMOR_MATERIALS.register(modEventBus);
         MightiestHeroesTab.CREATIVE_MODE_TABS.register(modEventBus);
         modEventBus.addListener(this::clientSetup);

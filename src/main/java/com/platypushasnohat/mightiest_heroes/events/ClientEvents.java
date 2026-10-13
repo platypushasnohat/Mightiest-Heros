@@ -2,8 +2,11 @@ package com.platypushasnohat.mightiest_heroes.events;
 
 import com.platypushasnohat.mightiest_heroes.MightiestHeroes;
 import com.platypushasnohat.mightiest_heroes.client.models.SuperSoldierArmorModel;
+import com.platypushasnohat.mightiest_heroes.client.models.VibraniumShieldItemModel;
 import com.platypushasnohat.mightiest_heroes.client.models.VibraniumShieldModel;
+import com.platypushasnohat.mightiest_heroes.client.renderer.VibraniumShieldItemRenderer;
 import com.platypushasnohat.mightiest_heroes.client.renderer.VibraniumShieldRenderer;
+import com.platypushasnohat.mightiest_heroes.registry.HeroEntities;
 import com.platypushasnohat.mightiest_heroes.registry.HeroItems;
 import com.platypushasnohat.mightiest_heroes.registry.HeroModelLayers;
 import net.minecraft.client.model.HumanoidModel;
@@ -26,7 +29,7 @@ public class ClientEvents {
         event.registerItem(new IClientItemExtensions() {
             @Override
             public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-                return VibraniumShieldRenderer.INSTANCE;
+                return VibraniumShieldItemRenderer.INSTANCE;
             }
         }, HeroItems.VIBRANIUM_SHIELD);
 
@@ -38,9 +41,14 @@ public class ClientEvents {
         }, HeroItems.SUPER_SOLDIER_MASK, HeroItems.SUPER_SOLDIER_CHESTPLATE, HeroItems.SUPER_SOLDIER_LEGGINGS, HeroItems.SUPER_SOLDIER_BOOTS);
     }
 
+    @SubscribeEvent
+    public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerEntityRenderer(HeroEntities.VIBRANIUM_SHIELD.get(), VibraniumShieldRenderer::new);
+    }
 
     @SubscribeEvent
     public static void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
+        event.registerLayerDefinition(HeroModelLayers.VIBRANIUM_SHIELD_ITEM, VibraniumShieldItemModel::createBodyLayer);
         event.registerLayerDefinition(HeroModelLayers.VIBRANIUM_SHIELD, VibraniumShieldModel::createBodyLayer);
     }
 }

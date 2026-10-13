@@ -6,6 +6,7 @@ import net.minecraft.client.model.geom.ModelLayerLocation;
 public class HeroModelLayers {
 
     public static final ModelLayerLocation VIBRANIUM_SHIELD = register("vibranium_shield");
+    public static final ModelLayerLocation VIBRANIUM_SHIELD_ITEM = register("vibranium_shield_item");
 
     public static ModelLayerLocation register(String name) {
         return register(name, "main");

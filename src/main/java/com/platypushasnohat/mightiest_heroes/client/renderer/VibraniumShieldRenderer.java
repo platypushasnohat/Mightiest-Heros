@@ -2,44 +2,48 @@ package com.platypushasnohat.mightiest_heroes.client.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Axis;
 import com.platypushasnohat.mightiest_heroes.MightiestHeroes;
 import com.platypushasnohat.mightiest_heroes.client.models.VibraniumShieldModel;
-import com.platypushasnohat.mightiest_heroes.registry.HeroItems;
+import com.platypushasnohat.mightiest_heroes.entity.VibraniumShield;
 import com.platypushasnohat.mightiest_heroes.registry.HeroModelLayers;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.geom.EntityModelSet;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
-import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemDisplayContext;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.util.Mth;
 
-public class VibraniumShieldRenderer extends BlockEntityWithoutLevelRenderer {
+public class VibraniumShieldRenderer extends EntityRenderer<VibraniumShield> {
 
-	private static final ResourceLocation VIBRANIUM_SHIELD_LOCATION = MightiestHeroes.location("textures/entity/vibranium_shield/vibranium_shield.png");
+    private static final ResourceLocation TEXTURE_LOCATION = MightiestHeroes.location("textures/entity/vibranium_shield/vibranium_shield.png");
 
-	public static final VibraniumShieldRenderer INSTANCE = new VibraniumShieldRenderer(Minecraft.getInstance().getBlockEntityRenderDispatcher(), Minecraft.getInstance().getEntityModels());
+    private static final float MIN_CAMERA_DISTANCE_SQUARED = Mth.square(3.5F);
 
-	private final VibraniumShieldModel vibraniumShieldModel;
+    private final VibraniumShieldModel model;
 
-	public VibraniumShieldRenderer(BlockEntityRenderDispatcher dispatcher, EntityModelSet modelSet) {
-		super(dispatcher, modelSet);
-		this.vibraniumShieldModel = new VibraniumShieldModel(modelSet.bakeLayer(HeroModelLayers.VIBRANIUM_SHIELD));
-	}
+    public VibraniumShieldRenderer(EntityRendererProvider.Context context) {
+        super(context);
+        this.model = new VibraniumShieldModel(context.bakeLayer(HeroModelLayers.VIBRANIUM_SHIELD));
+    }
 
-	@Override
-	public void renderByItem(ItemStack stack, ItemDisplayContext context, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int overlay) {
-		if (stack.is(HeroItems.VIBRANIUM_SHIELD.get())) {
-			poseStack.pushPose();
-			poseStack.translate(0.5F, 1.5F, 0.5F);
-			poseStack.mulPose(Axis.XP.rotationDegrees(-180.0F));
-			poseStack.mulPose(Axis.YP.rotationDegrees(180.0F));
-			VertexConsumer consumer = ItemRenderer.getFoilBufferDirect(buffer, this.vibraniumShieldModel.renderType(VIBRANIUM_SHIELD_LOCATION), false, stack.hasFoil());
-			this.vibraniumShieldModel.renderToBuffer(poseStack, consumer, packedLight, overlay);
-			poseStack.popPose();
-		}
-	}
+    @Override
+    public void render(VibraniumShield entity, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+        if (entity.tickCount >= 2 || !(this.entityRenderDispatcher.camera.getEntity().distanceToSqr(entity) < (double) MIN_CAMERA_DISTANCE_SQUARED)) {
+            poseStack.pushPose();
+            poseStack.scale(-1.0F, -1.0F, 1.0F);
+            poseStack.translate(0.0F, -1.501F, 0.0F);
+            float ageInTicks = (float) entity.tickCount + partialTicks;
+            VertexConsumer consumer = bufferSource.getBuffer(RenderType.entityCutout(TEXTURE_LOCATION));
+            this.model.setupAnim(entity, 0.0F, 0.0F, ageInTicks, 0.0F, 0.0F);
+            this.model.renderToBuffer(poseStack, consumer, packedLight, OverlayTexture.NO_OVERLAY);
+            poseStack.popPose();
+            super.render(entity, entityYaw, partialTicks, poseStack, bufferSource, packedLight);
+        }
+    }
+
+    @Override
+    public ResourceLocation getTextureLocation(VibraniumShield entity) {
+        return TEXTURE_LOCATION;
+    }
 }
