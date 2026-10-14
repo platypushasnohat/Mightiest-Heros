@@ -19,7 +19,7 @@ public class HeroEntities {
 
     public static List<DeferredHolder<EntityType<?>, ? extends EntityType<?>>> ENTITY_TRANSLATIONS = new ArrayList<>();
 
-    public static final DeferredHolder<EntityType<?>, EntityType<VibraniumShield>> VIBRANIUM_SHIELD = registerEntity("vibranium_shield", VibraniumShield::new, MobCategory.MISC, builder -> builder.sized(1.15F, 0.1F).fireImmune().clientTrackingRange(4));
+    public static final DeferredHolder<EntityType<?>, EntityType<VibraniumShield>> VIBRANIUM_SHIELD = registerEntity("vibranium_shield", VibraniumShield::new, MobCategory.MISC, builder -> builder.sized(1.25F, 0.25F).fireImmune().clientTrackingRange(10));
 
     public static <E extends Entity> DeferredHolder<EntityType<?>, EntityType<E>> registerEntity(String name, EntityType.EntityFactory<E> factory, MobCategory entityClassification, Consumer<EntityType.Builder<E>> builderConsumer) {
         DeferredHolder<EntityType<?>, EntityType<E>> entity = registerEntityNoLang(name, factory, entityClassification, builderConsumer);

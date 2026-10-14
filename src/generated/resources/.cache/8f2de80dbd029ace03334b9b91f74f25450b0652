@@ -1,0 +1,10 @@
+// 1.21.1	2026-10-14T17:03:25.1740764	Tags for minecraft:item mod id mightiest_heroes
+3541eb01a19ceea23b98487cfe0caaa241fb4aa0 data/c/tags/item/tools/shield.json
+430050850f0786e72306336f6cd5bfc2595ec5f5 data/minecraft/tags/item/chest_armor.json
+3541eb01a19ceea23b98487cfe0caaa241fb4aa0 data/minecraft/tags/item/enchantable/durability.json
+3541eb01a19ceea23b98487cfe0caaa241fb4aa0 data/minecraft/tags/item/enchantable/sharp_weapon.json
+3541eb01a19ceea23b98487cfe0caaa241fb4aa0 data/minecraft/tags/item/enchantable/sword.json
+3541eb01a19ceea23b98487cfe0caaa241fb4aa0 data/minecraft/tags/item/enchantable/vanishing.json
+6185405088b5949f7ae4a44140f53a0af3392fa6 data/minecraft/tags/item/foot_armor.json
+07880507c5203ef9e81cdf610438a925283dd32d data/minecraft/tags/item/head_armor.json
+dcb88dab65827d379bfd4da1fb13d0744cefeafd data/minecraft/tags/item/leg_armor.json

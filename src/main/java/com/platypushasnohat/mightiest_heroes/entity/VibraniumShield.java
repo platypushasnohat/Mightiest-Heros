@@ -9,17 +9,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.AnimationState;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
@@ -53,16 +49,9 @@ public class VibraniumShield extends ThrowableItemProjectile {
         this.noPhysics = true;
     }
 
-    public VibraniumShield(Level level, double x, double y, double z) {
-        super(HeroEntities.VIBRANIUM_SHIELD.get(), x, y, z, level);
+    public VibraniumShield(Level level, LivingEntity shooter) {
+        super(HeroEntities.VIBRANIUM_SHIELD.get(), shooter, level);
         this.noPhysics = true;
-    }
-
-    @Override
-    public void recreateFromPacket(ClientboundAddEntityPacket packet) {
-        super.recreateFromPacket(packet);
-        this.xRotO = this.getXRot();
-        this.yRotO = this.getYRot();
     }
 
     @Override
@@ -122,144 +111,15 @@ public class VibraniumShield extends ThrowableItemProjectile {
         this.entityData.set(RICOCHET_COUNT, ricochetCount);
     }
 
-    @Override
-    protected Item getDefaultItem() {
-        return HeroItems.VIBRANIUM_SHIELD.get();
+    public float getPitch(float partialTicks) {
+        return Mth.lerp(partialTicks, this.prevPitch, this.pitch);
     }
 
-    @Override
-    public boolean isNoGravity() {
-        return true;
+    public float getRoll(float partialTicks) {
+        return Mth.lerp(partialTicks, this.prevRoll, this.roll);
     }
 
-    @Override
-    public float getPickRadius() {
-        return 2.0F;
-    }
-
-    @Override
-    public boolean ignoreExplosion(Explosion explosion) {
-        return true;
-    }
-
-    @Override
-    public void push(double x, double y, double z) {
-    }
-
-    @Override
-    protected void onHitEntity(EntityHitResult result) {
-        Entity entity = result.getEntity();
-        if (!this.level().isClientSide && this.getOwner() instanceof LivingEntity living && entity != this.getOwner()) {
-            DamageSource damageSource = this.damageSources().mobProjectile(this, living);
-            if (entity.hurt(damageSource, this.getDamage())) {
-                this.playImpactSound(entity.getX(), entity.getY(), entity.getZ());
-                this.ricochet();
-            }
-        }
-        super.onHitEntity(result);
-    }
-
-    @Override
-    protected void onHitBlock(BlockHitResult result) {
-        super.onHitBlock(result);
-        BlockPos pos = result.getBlockPos();
-        BlockState state = this.level().getBlockState(pos);
-        if (this.getOwner() != null) {
-            this.ricochet();
-        }
-        this.spawnBlockParticles(pos, state);
-        this.playImpactSound(pos.getX(), pos.getY(), pos.getZ());
-    }
-
-    private void spawnBlockParticles(BlockPos pos, BlockState state) {
-        if (state.getRenderShape() != RenderShape.INVISIBLE) {
-            if (this.level().isClientSide) {
-                for (int i = 0; i < 5; i++) {
-                    Vec3 deltaMovement = this.getDeltaMovement();
-                    double posX = this.getX() + (this.getRandom().nextDouble() - 0.5D);
-                    double posZ = this.getZ() + (this.getRandom().nextDouble() - 0.5D);
-                    this.level().addParticle(new BlockParticleOption(ParticleTypes.BLOCK, state).setPos(pos), posX, this.getY() + 0.1D, posZ, deltaMovement.x * -4.0D, 1.5D, deltaMovement.z * -4.0D);
-                }
-            }
-        }
-    }
-
-    public boolean hasLineOfSight(Entity entity) {
-        if (entity.level() != this.level()) {
-            return false;
-        } else {
-            Vec3 position = new Vec3(this.getX(), this.getEyeY(), this.getZ());
-            Vec3 targetPosition = new Vec3(entity.getX(), entity.getEyeY(), entity.getZ());
-            return !(targetPosition.distanceTo(position) > (double) 128.0F) && this.level().clip(new ClipContext(position, targetPosition, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this)).getType() == HitResult.Type.MISS;
-        }
-    }
-
-    private void ricochet() {
-        Entity owner = this.getOwner();
-        AABB searchBox = this.getBoundingBox().inflate(12.0D, 4.0D, 12.0D);
-        Entity ricochetTo = null;
-        for (LivingEntity living : this.level().getEntitiesOfClass(LivingEntity.class, searchBox)) {
-            if (this.hasLineOfSight(living) && !this.isAlliedTo(living) && !living.is(this) && (owner == null || !living.is(owner) && !living.isAlliedTo(owner)) && living.distanceTo(this) > 3.0D) {
-                ricochetTo = living;
-                break;
-            }
-        }
-        if (ricochetTo != null && this.getRicochetCount() < MAX_BOUNCES) {
-            this.bounce(ricochetTo, owner);
-        }
-        if (this.getOwner() != null && (ricochetTo == null || this.getRicochetCount() >= MAX_BOUNCES)) {
-            this.flyBack(this.getOwner());
-        }
-    }
-
-    private void bounce(Entity ricochetTo, Entity owner) {
-        if (owner != null) {
-            this.setRicochetCount(this.getRicochetCount() + 1);
-            this.setReturnTime(this.getReturnTime() + 10);
-            Vec3 direction = ricochetTo.getEyePosition().subtract(this.position()).normalize().scale(0.9F);
-            this.setDeltaMovement(direction);
-        }
-    }
-
-    @Override
-    public void tick() {
-        super.tick();
-        Vec3 deltaMovement = this.getDeltaMovement();
-        ItemStack stack = this.getItem();
-        if (!this.level().isClientSide) {
-            Entity owner = this.getOwner();
-            if (owner == null || !owner.isAlive() || !owner.level().equals(this.level()) || this.distanceTo(owner) > 1000.0F) {
-                this.discard();
-                return;
-            }
-
-            if (owner instanceof LivingEntity living) {
-                if (this.getReturnTime() > 0) {
-                    this.setReturnTime(this.getReturnTime() - 1);
-                }
-                else {
-                    float height = living.getBbHeight();
-                    Vec3 ownerPos = living.position().add(0, height * 0.6F, 0);
-                    double velocity = Mth.clamp(deltaMovement.length() * 3.0D, 0.75F, 1.5F);
-                    Vec3 returnMotion = ownerPos.subtract(position()).normalize().scale(velocity);
-                    this.setDeltaMovement(deltaMovement.lerp(returnMotion, 0.2F));
-                    if (this.isAlive() && this.distanceTo(living) <= 2.0F) {
-                        VibraniumShieldItem.catchShield(this, stack, living);
-                    }
-                }
-            }
-        } else {
-            this.updateRollAndPitch();
-            this.projectileAnimationState.animateWhen(this.isAlive(), this.tickCount);
-        }
-    }
-
-    @Override
-    protected void updateRotation() {
-        ProjectileUtil.rotateTowardsMovement(this, 0.4F);
-    }
-
-    private void updateRollAndPitch() {
+    private void updatePitchAndRoll() {
         this.prevPitch = this.pitch;
         this.prevRoll = this.roll;
         float target = 0.0F;
@@ -293,24 +153,6 @@ public class VibraniumShield extends ThrowableItemProjectile {
         this.pitch += (target - this.pitch) * 0.4F;
     }
 
-    public float getPitch(float partialTicks) {
-        return Mth.lerp(partialTicks, this.prevPitch, this.pitch);
-    }
-
-    public float getRoll(float partialTicks) {
-        return Mth.lerp(partialTicks, this.prevRoll, this.roll);
-    }
-
-    @Override
-    public void shootFromRotation(Entity shooter, float rotationPitch, float rotationYaw, float pitchOffset, float velocity, float inaccuracy) {
-        float x = -Mth.sin(rotationYaw * Mth.DEG_TO_RAD) * Mth.cos(rotationPitch * Mth.DEG_TO_RAD);
-        float y = -Mth.sin((rotationPitch + pitchOffset) * Mth.DEG_TO_RAD);
-        float z = Mth.cos(rotationYaw * Mth.DEG_TO_RAD) * Mth.cos(rotationPitch * Mth.DEG_TO_RAD);
-        this.shoot(x, y, z, velocity, inaccuracy);
-        Vec3 shooterMovement = shooter.getDeltaMovement();
-        this.setDeltaMovement(this.getDeltaMovement().add(shooterMovement.x, shooterMovement.y, shooterMovement.z));
-    }
-
     private void playImpactSound(double x, double y, double z) {
         this.level().playSound(null, x, y, z, HeroSoundEvents.VIBRANIUM_SHIELD_IMPACT, SoundSource.NEUTRAL, 1.0F, SinewSoundUtils.randomizePitch(this.level()));
     }
@@ -321,5 +163,164 @@ public class VibraniumShield extends ThrowableItemProjectile {
         Vec3 ownerPos = owner.position().add(0.0F, owner.getBbHeight() * 0.5F, 0.0F);
         Vec3 returnMotion = ownerPos.subtract(this.position()).normalize().scale(0.8F);
         this.setDeltaMovement(returnMotion);
+    }
+
+    private void moveToOwner(LivingEntity living) {
+        ItemStack stack = this.getItem();
+        Vec3 deltaMovement = this.getDeltaMovement();
+        Vec3 ownerPos = new Vec3(living.getX(), living.getEyeY() - 0.1F, living.getZ());
+        double velocity = Mth.clamp(deltaMovement.length() * 3.0D, 0.75F, 1.5F);
+        Vec3 returnMotion = ownerPos.subtract(this.position()).normalize().scale(velocity);
+        this.setDeltaMovement(deltaMovement.lerp(returnMotion, 0.2F));
+        if (this.isAlive() && this.distanceTo(living) <= 2.0F) {
+            VibraniumShieldItem.catchShield(this, stack, living);
+        }
+    }
+
+    private void spawnBlockParticles(BlockPos pos, BlockState state) {
+        if (state.getRenderShape() != RenderShape.INVISIBLE) {
+            if (this.level().isClientSide) {
+                for (int i = 0; i < 5; i++) {
+                    Vec3 deltaMovement = this.getDeltaMovement();
+                    double posX = this.getX() + (this.getRandom().nextDouble() - 0.5D);
+                    double posZ = this.getZ() + (this.getRandom().nextDouble() - 0.5D);
+                    this.level().addParticle(new BlockParticleOption(ParticleTypes.BLOCK, state).setPos(pos), posX, this.getY() + 0.1D, posZ, deltaMovement.x * -4.0D, 1.5D, deltaMovement.z * -4.0D);
+                }
+            }
+        }
+    }
+
+    private boolean canHitEntity(Entity owner, Entity target) {
+        return owner != null
+                && target != this
+                && target != owner
+                && !target.isAlliedTo(owner)
+                && !owner.isAlliedTo(target)
+                && !(target instanceof OwnableEntity ownable && ownable.getOwner() == owner)
+                && target.getControllingPassenger() != owner;
+    }
+
+    private boolean hasLineOfSight(Entity entity) {
+        if (entity.level() != this.level()) {
+            return false;
+        } else {
+            Vec3 position = new Vec3(this.getX(), this.getEyeY(), this.getZ());
+            Vec3 targetPosition = new Vec3(entity.getX(), entity.getEyeY(), entity.getZ());
+            return !(targetPosition.distanceTo(position) > (double) 128.0F) && this.level().clip(new ClipContext(position, targetPosition, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this)).getType() == HitResult.Type.MISS;
+        }
+    }
+
+    private void ricochet() {
+        Entity owner = this.getOwner();
+        AABB searchBox = this.getBoundingBox().inflate(12.0D, 4.0D, 12.0D);
+        Entity ricochetTo = null;
+        for (LivingEntity living : this.level().getEntitiesOfClass(LivingEntity.class, searchBox)) {
+            if (this.hasLineOfSight(living) && this.canHitEntity(owner, living) && living.distanceTo(this) > 3.0D) {
+                ricochetTo = living;
+                break;
+            }
+        }
+        if (ricochetTo != null && this.getRicochetCount() < MAX_BOUNCES) {
+            this.bounce(ricochetTo, owner);
+        }
+        if (this.getOwner() != null && (ricochetTo == null || this.getRicochetCount() >= MAX_BOUNCES)) {
+            this.flyBack(this.getOwner());
+        }
+    }
+
+    private void bounce(Entity ricochetTo, Entity owner) {
+        if (owner != null) {
+            this.setRicochetCount(this.getRicochetCount() + 1);
+            this.setReturnTime(this.getReturnTime() + 10);
+            Vec3 direction = ricochetTo.getEyePosition().subtract(this.position()).normalize().scale(0.9F);
+            this.setDeltaMovement(direction);
+        }
+    }
+
+    @Override
+    protected Item getDefaultItem() {
+        return HeroItems.VIBRANIUM_SHIELD.get();
+    }
+
+    @Override
+    public boolean isNoGravity() {
+        return true;
+    }
+
+    @Override
+    public float getPickRadius() {
+        return 2.0F;
+    }
+
+    @Override
+    public boolean ignoreExplosion(Explosion explosion) {
+        return true;
+    }
+
+    @Override
+    public void push(double x, double y, double z) {
+    }
+
+    @Override
+    protected void onHitEntity(EntityHitResult result) {
+        Entity target = result.getEntity();
+        Entity owner = this.getOwner();
+        if (!this.level().isClientSide && owner instanceof LivingEntity living && this.canHitEntity(living, target)) {
+            DamageSource damageSource = this.damageSources().mobProjectile(this, living);
+            if (target.hurt(damageSource, this.getDamage())) {
+                this.playImpactSound(target.getX(), target.getY(), target.getZ());
+                this.ricochet();
+            }
+        }
+        super.onHitEntity(result);
+    }
+
+    @Override
+    protected void onHitBlock(BlockHitResult result) {
+        super.onHitBlock(result);
+        BlockPos pos = result.getBlockPos();
+        BlockState state = this.level().getBlockState(pos);
+        if (this.getOwner() != null) {
+            this.ricochet();
+        }
+        this.spawnBlockParticles(pos, state);
+        this.playImpactSound(pos.getX(), pos.getY(), pos.getZ());
+    }
+
+    @Override
+    protected void updateRotation() {
+        ProjectileUtil.rotateTowardsMovement(this, 0.4F);
+    }
+
+    @Override
+    public void shootFromRotation(Entity shooter, float x, float y, float z, float velocity, float inaccuracy) {
+        float xPos = -Mth.sin(y * Mth.DEG_TO_RAD) * Mth.cos(x * Mth.DEG_TO_RAD);
+        float yPos = -Mth.sin((x + z) * Mth.DEG_TO_RAD);
+        float zPos = Mth.cos(y * Mth.DEG_TO_RAD) * Mth.cos(x * Mth.DEG_TO_RAD);
+        this.shoot(xPos, yPos, zPos, velocity, inaccuracy);
+        Vec3 knownMovement = shooter.getKnownMovement();
+        this.setDeltaMovement(this.getDeltaMovement().add(knownMovement.x, 0.0F, knownMovement.z));
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if (!this.level().isClientSide) {
+            Entity owner = this.getOwner();
+            if (owner == null || !owner.isAlive() || !owner.level().equals(this.level()) || this.distanceTo(owner) > 1000.0F) {
+                this.discard();
+                return;
+            }
+            if (owner instanceof LivingEntity living) {
+                if (this.getReturnTime() > 0) {
+                    this.setReturnTime(this.getReturnTime() - 1);
+                } else {
+                    this.moveToOwner(living);
+                }
+            }
+        } else {
+            this.updatePitchAndRoll();
+            this.projectileAnimationState.animateWhen(this.isAlive(), this.tickCount);
+        }
     }
 }

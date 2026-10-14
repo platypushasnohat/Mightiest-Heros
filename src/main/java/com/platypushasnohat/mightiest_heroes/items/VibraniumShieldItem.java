@@ -28,7 +28,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.ItemAbilities;
 import net.neoforged.neoforge.common.ItemAbility;
 
@@ -43,7 +42,7 @@ public class VibraniumShieldItem extends Item implements Equipable {
     private int swingSoundCooldown = 0;
 
     public VibraniumShieldItem(Properties properties) {
-        super(properties.component(DataComponents.TOOL, createToolProperties()).attributes(createAttributes(5.0F, -2.4F)));
+        super(properties.durability(1600).stacksTo(1).component(DataComponents.TOOL, createToolProperties()).attributes(createAttributes(5.0F, -2.4F)));
         DispenserBlock.registerBehavior(this, ArmorItem.DISPENSE_ITEM_BEHAVIOR);
     }
 
@@ -61,8 +60,7 @@ public class VibraniumShieldItem extends Item implements Equipable {
             slot = Inventory.SLOT_OFFHAND;
         }
         if (!level.isClientSide) {
-            Vec3 position = player.position().add(0, player.getBbHeight() * 0.5F, 0);
-            VibraniumShield shield = new VibraniumShield(level, position.x, position.y, position.z);
+            VibraniumShield shield = new VibraniumShield(level, player);
             shield.setOwner(player);
             shield.setItem(stack);
             shield.setReturnTime(THROWN_SHIELD_RETURN_TIME);
@@ -141,10 +139,10 @@ public class VibraniumShieldItem extends Item implements Equipable {
             player.startUsingItem(hand);
             return InteractionResultHolder.pass(stack);
         } else {
+            player.swing(hand, true);
             this.throwShield(stack, level, player, hand);
             stack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(hand));
             player.awardStat(Stats.ITEM_USED.get(stack.getItem()));
-            player.swing(hand, true);
             return InteractionResultHolder.success(stack);
         }
     }

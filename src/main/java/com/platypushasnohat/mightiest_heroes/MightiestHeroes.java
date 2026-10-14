@@ -1,8 +1,11 @@
 package com.platypushasnohat.mightiest_heroes;
 
+import com.platypushasnohat.mightiest_heroes.datagen.client.HeroBlockStateProvider;
 import com.platypushasnohat.mightiest_heroes.datagen.client.HeroItemModelProvider;
 import com.platypushasnohat.mightiest_heroes.datagen.client.HeroLanguageProvider;
 import com.platypushasnohat.mightiest_heroes.datagen.client.HeroSoundDefinitionsProvider;
+import com.platypushasnohat.mightiest_heroes.datagen.server.HeroBlockTagsProvider;
+import com.platypushasnohat.mightiest_heroes.datagen.server.HeroItemTagsProvider;
 import com.platypushasnohat.mightiest_heroes.registry.*;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
@@ -51,7 +54,12 @@ public class MightiestHeroes {
         boolean server = event.includeServer();
         boolean client = event.includeClient();
 
+        HeroBlockTagsProvider blockTags = new HeroBlockTagsProvider(output, provider, helper);
+        generator.addProvider(server, blockTags);
+        generator.addProvider(server, new HeroItemTagsProvider(output, provider, blockTags.contentsGetter(), helper));
+
         generator.addProvider(client, new HeroItemModelProvider(output, helper));
+        generator.addProvider(client, new HeroBlockStateProvider(output, helper));
         generator.addProvider(client, new HeroSoundDefinitionsProvider(output, helper));
         generator.addProvider(client, new HeroLanguageProvider(output));
     }
