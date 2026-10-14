@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "S": {
+      "item": "minecraft:shield"
+    },
+    "V": {
+      "item": "mightiest_heroes:vibranium_ingot"
+    }
+  },
+  "pattern": [
+    "VVV",
+    "VSV",
+    "VVV"
+  ],
+  "result": {
+    "count": 1,
+    "id": "mightiest_heroes:vibranium_shield"
+  }
+}

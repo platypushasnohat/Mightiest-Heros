@@ -1,0 +1,8 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#minecraft:is_jungle",
+  "features": [
+    "mightiest_heroes:ore_vibranium"
+  ],
+  "step": "underground_ores"
+}

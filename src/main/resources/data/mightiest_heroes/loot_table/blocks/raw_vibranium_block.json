@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "mightiest_heroes:block_of_vibranium"
+          "name": "mightiest_heroes:raw_vibranium_block"
         }
       ],
       "rolls": 1
     }
   ],
-  "random_sequence": "mightiest_heroes:blocks/block_of_raw_vibranium"
+  "random_sequence": "mightiest_heroes:blocks/raw_vibranium_block"
 }

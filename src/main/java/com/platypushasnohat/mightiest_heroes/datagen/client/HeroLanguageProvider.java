@@ -25,5 +25,9 @@ public class HeroLanguageProvider extends SinewLanguageProvider {
         this.addSound(HeroSoundEvents.VIBRANIUM_SHIELD_CATCH, "Vibranium Shield caught");
 
         this.add(HeroItems.DISABLED_VIBRANIUM_SHIELD.get(), "Vibranium Shield");
+
+        this.add(HeroBlocks.VIBRANIUM_BLOCK.get(), "Block of Vibranium");
+        this.add(HeroBlocks.RAW_VIBRANIUM_BLOCK.get(), "Block of Raw Vibranium");
+
     }
 }

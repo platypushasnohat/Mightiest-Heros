@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "mightiest_heroes:raw_vibranium_block"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "id": "mightiest_heroes:raw_vibranium"
+  }
+}

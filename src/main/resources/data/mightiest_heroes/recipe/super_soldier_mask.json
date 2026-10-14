@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "L": {
+      "item": "minecraft:leather"
+    },
+    "I": {
+      "item": "minecraft:iron_helmet"
+    },
+    "V": {
+      "item": "mightiest_heroes:vibranium_ingot"
+    }
+  },
+  "pattern": [
+    "LVL",
+    "LIL"
+  ],
+  "result": {
+    "count": 1,
+    "id": "mightiest_heroes:super_soldier_mask"
+  }
+}

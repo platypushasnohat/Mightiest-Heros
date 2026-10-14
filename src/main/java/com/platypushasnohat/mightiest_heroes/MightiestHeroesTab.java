@@ -20,9 +20,9 @@ public class MightiestHeroesTab {
                         output.accept(HeroBlocks.VIBRANIUM_ORE.get());
                         output.accept(HeroBlocks.DEEPSLATE_VIBRANIUM_ORE.get());
                         output.accept(HeroItems.RAW_VIBRANIUM.get());
-                        output.accept(HeroBlocks.BLOCK_OF_RAW_VIBRANIUM.get());
+                        output.accept(HeroBlocks.RAW_VIBRANIUM_BLOCK.get());
                         output.accept(HeroItems.VIBRANIUM_INGOT.get());
-                        output.accept(HeroBlocks.BLOCK_OF_VIBRANIUM.get());
+                        output.accept(HeroBlocks.VIBRANIUM_BLOCK.get());
                         output.accept(HeroItems.SUPER_SOLDIER_MASK.get());
                         output.accept(HeroItems.SUPER_SOLDIER_CHESTPLATE.get());
                         output.accept(HeroItems.SUPER_SOLDIER_LEGGINGS.get());

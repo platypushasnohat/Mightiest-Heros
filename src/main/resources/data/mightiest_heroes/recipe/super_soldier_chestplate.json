@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "L": {
+      "item": "minecraft:leather"
+    },
+    "I": {
+      "item": "minecraft:iron_chestplate"
+    },
+    "V": {
+      "item": "mightiest_heroes:vibranium_ingot"
+    }
+  },
+  "pattern": [
+    "LVL",
+    "LIL",
+    "LLL"
+  ],
+  "result": {
+    "count": 1,
+    "id": "mightiest_heroes:super_soldier_chestplate"
+  }
+}

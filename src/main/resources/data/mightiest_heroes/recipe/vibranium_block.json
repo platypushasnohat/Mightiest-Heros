@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "V": {
+      "item": "mightiest_heroes:vibranium_ingot"
+    }
+  },
+  "pattern": [
+    "VVV",
+    "VVV",
+    "VVV"
+  ],
+  "result": {
+    "count": 1,
+    "id": "mightiest_heroes:vibranium_block"
+  }
+}

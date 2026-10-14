@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:blasting",
+  "cookingtime": 200,
+  "experience": 1.0,
+  "ingredient": {
+    "item": "mightiest_heroes:raw_vibranium"
+  },
+  "result": {
+    "id": "mightiest_heroes:vibranium_ingot"
+  }
+}
