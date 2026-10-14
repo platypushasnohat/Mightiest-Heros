@@ -31,6 +31,7 @@ public class MightiestHeroes {
         HeroItems.ITEMS.register(modEventBus);
         HeroBlocks.BLOCKS.register(modEventBus);
         HeroEntities.ENTITY_TYPE.register(modEventBus);
+        HeroSoundEvents.SOUND_EVENT.register(modEventBus);
         HeroArmorMaterials.ARMOR_MATERIALS.register(modEventBus);
         MightiestHeroesTab.CREATIVE_MODE_TABS.register(modEventBus);
         modEventBus.addListener(this::clientSetup);

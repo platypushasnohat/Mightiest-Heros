@@ -11,5 +11,8 @@
   "item.mightiest_heroes.super_soldier_leggings": "Super Soldier Leggings",
   "item.mightiest_heroes.super_soldier_mask": "Super Soldier Mask",
   "item.mightiest_heroes.vibranium_ingot": "Vibranium Ingot",
-  "item.mightiest_heroes.vibranium_shield": "Vibranium Shield"
+  "item.mightiest_heroes.vibranium_shield": "Vibranium Shield",
+  "subtitles.mightiest_heroes.vibranium_shield_catch": "Vibranium Shield caught",
+  "subtitles.mightiest_heroes.vibranium_shield_impact": "Vibranium Shield impacts",
+  "subtitles.mightiest_heroes.vibranium_shield_swipe": "Vibranium Shield swipes"
 }

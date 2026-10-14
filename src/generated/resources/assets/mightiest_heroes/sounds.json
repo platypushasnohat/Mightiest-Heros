@@ -1,0 +1,24 @@
+{
+  "vibranium_shield_catch": {
+    "sounds": [
+      "mightiest_heroes:entity/vibranium_shield/catch"
+    ],
+    "subtitle": "subtitles.mightiest_heroes.vibranium_shield_catch"
+  },
+  "vibranium_shield_impact": {
+    "sounds": [
+      "mightiest_heroes:entity/vibranium_shield/impact1",
+      "mightiest_heroes:entity/vibranium_shield/impact2",
+      "mightiest_heroes:entity/vibranium_shield/impact3"
+    ],
+    "subtitle": "subtitles.mightiest_heroes.vibranium_shield_impact"
+  },
+  "vibranium_shield_swipe": {
+    "sounds": [
+      "mightiest_heroes:entity/vibranium_shield/swipe1",
+      "mightiest_heroes:entity/vibranium_shield/swipe2",
+      "mightiest_heroes:entity/vibranium_shield/swipe3"
+    ],
+    "subtitle": "subtitles.mightiest_heroes.vibranium_shield_swipe"
+  }
+}

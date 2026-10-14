@@ -32,14 +32,16 @@ public class VibraniumShieldItemRenderer extends BlockEntityWithoutLevelRenderer
 
 	@Override
 	public void renderByItem(ItemStack stack, ItemDisplayContext context, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int overlay) {
+		poseStack.pushPose();
+		poseStack.translate(0.5F, 1.5F, 0.5F);
+		poseStack.mulPose(Axis.XP.rotationDegrees(-180.0F));
+		poseStack.mulPose(Axis.YP.rotationDegrees(180.0F));
+
 		if (stack.is(HeroItems.VIBRANIUM_SHIELD.get())) {
-			poseStack.pushPose();
-			poseStack.translate(0.5F, 1.5F, 0.5F);
-			poseStack.mulPose(Axis.XP.rotationDegrees(-180.0F));
-			poseStack.mulPose(Axis.YP.rotationDegrees(180.0F));
 			VertexConsumer consumer = ItemRenderer.getFoilBufferDirect(buffer, this.vibraniumShieldItemModel.renderType(VIBRANIUM_SHIELD_LOCATION), false, stack.hasFoil());
 			this.vibraniumShieldItemModel.renderToBuffer(poseStack, consumer, packedLight, overlay);
-			poseStack.popPose();
 		}
+
+		poseStack.popPose();
 	}
 }

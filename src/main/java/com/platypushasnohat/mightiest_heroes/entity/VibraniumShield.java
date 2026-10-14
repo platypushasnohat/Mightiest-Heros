@@ -1,17 +1,18 @@
 package com.platypushasnohat.mightiest_heroes.entity;
 
+import com.platypushasnohat.mightiest_heroes.items.VibraniumShieldItem;
 import com.platypushasnohat.mightiest_heroes.registry.HeroEntities;
 import com.platypushasnohat.mightiest_heroes.registry.HeroItems;
-import com.platypushasnohat.sinew.item.DisabledItem;
+import com.platypushasnohat.mightiest_heroes.registry.HeroSoundEvents;
 import com.platypushasnohat.sinew.utils.SinewSoundUtils;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
@@ -23,12 +24,12 @@ import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.*;
 
 public class VibraniumShield extends ThrowableItemProjectile {
 
@@ -36,6 +37,8 @@ public class VibraniumShield extends ThrowableItemProjectile {
     private static final EntityDataAccessor<Integer> RETURN_TIME = SynchedEntityData.defineId(VibraniumShield.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> SLOT = SynchedEntityData.defineId(VibraniumShield.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> RICOCHET_COUNT = SynchedEntityData.defineId(VibraniumShield.class, EntityDataSerializers.INT);
+
+    private static final int MAX_BOUNCES = 3;
 
     public AnimationState projectileAnimationState = new AnimationState();
 
@@ -131,7 +134,7 @@ public class VibraniumShield extends ThrowableItemProjectile {
 
     @Override
     public float getPickRadius() {
-        return 4.0F;
+        return 2.0F;
     }
 
     @Override
@@ -160,27 +163,51 @@ public class VibraniumShield extends ThrowableItemProjectile {
     protected void onHitBlock(BlockHitResult result) {
         super.onHitBlock(result);
         BlockPos pos = result.getBlockPos();
-        this.setReturnTime(0);
-        this.playImpactSound(pos.getX(), pos.getY(), pos.getZ());
+        BlockState state = this.level().getBlockState(pos);
         if (this.getOwner() != null) {
             this.ricochet();
+        }
+        this.spawnBlockParticles(pos, state);
+        this.playImpactSound(pos.getX(), pos.getY(), pos.getZ());
+    }
+
+    private void spawnBlockParticles(BlockPos pos, BlockState state) {
+        if (state.getRenderShape() != RenderShape.INVISIBLE) {
+            if (this.level().isClientSide) {
+                for (int i = 0; i < 5; i++) {
+                    Vec3 deltaMovement = this.getDeltaMovement();
+                    double posX = this.getX() + (this.getRandom().nextDouble() - 0.5D);
+                    double posZ = this.getZ() + (this.getRandom().nextDouble() - 0.5D);
+                    this.level().addParticle(new BlockParticleOption(ParticleTypes.BLOCK, state).setPos(pos), posX, this.getY() + 0.1D, posZ, deltaMovement.x * -4.0D, 1.5D, deltaMovement.z * -4.0D);
+                }
+            }
+        }
+    }
+
+    public boolean hasLineOfSight(Entity entity) {
+        if (entity.level() != this.level()) {
+            return false;
+        } else {
+            Vec3 position = new Vec3(this.getX(), this.getEyeY(), this.getZ());
+            Vec3 targetPosition = new Vec3(entity.getX(), entity.getEyeY(), entity.getZ());
+            return !(targetPosition.distanceTo(position) > (double) 128.0F) && this.level().clip(new ClipContext(position, targetPosition, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this)).getType() == HitResult.Type.MISS;
         }
     }
 
     private void ricochet() {
         Entity owner = this.getOwner();
-        AABB searchBox = this.getBoundingBox().inflate(8.0D, 3.0D, 8.0D);
+        AABB searchBox = this.getBoundingBox().inflate(12.0D, 4.0D, 12.0D);
         Entity ricochetTo = null;
         for (LivingEntity living : this.level().getEntitiesOfClass(LivingEntity.class, searchBox)) {
-            if (!this.isAlliedTo(living) && !living.is(this) && (owner == null || !living.is(owner) && !living.isAlliedTo(owner)) && living.distanceTo(this) > 3.0D) {
+            if (this.hasLineOfSight(living) && !this.isAlliedTo(living) && !living.is(this) && (owner == null || !living.is(owner) && !living.isAlliedTo(owner)) && living.distanceTo(this) > 3.0D) {
                 ricochetTo = living;
                 break;
             }
         }
-        if (ricochetTo != null && this.getRicochetCount() < 2) {
+        if (ricochetTo != null && this.getRicochetCount() < MAX_BOUNCES) {
             this.bounce(ricochetTo, owner);
         }
-        else if (this.getOwner() != null) {
+        if (this.getOwner() != null && (ricochetTo == null || this.getRicochetCount() >= MAX_BOUNCES)) {
             this.flyBack(this.getOwner());
         }
     }
@@ -188,8 +215,8 @@ public class VibraniumShield extends ThrowableItemProjectile {
     private void bounce(Entity ricochetTo, Entity owner) {
         if (owner != null) {
             this.setRicochetCount(this.getRicochetCount() + 1);
-            this.setReturnTime(this.getReturnTime() + 8);
-            Vec3 direction = ricochetTo.getEyePosition().subtract(this.position()).normalize();
+            this.setReturnTime(this.getReturnTime() + 10);
+            Vec3 direction = ricochetTo.getEyePosition().subtract(this.position()).normalize().scale(0.9F);
             this.setDeltaMovement(direction);
         }
     }
@@ -213,16 +240,11 @@ public class VibraniumShield extends ThrowableItemProjectile {
                 else {
                     float height = living.getBbHeight();
                     Vec3 ownerPos = living.position().add(0, height * 0.6F, 0);
-                    double velocity = Mth.clamp(deltaMovement.length() * 3.0D, 0.5F, 1.5F);
+                    double velocity = Mth.clamp(deltaMovement.length() * 3.0D, 0.75F, 1.5F);
                     Vec3 returnMotion = ownerPos.subtract(position()).normalize().scale(velocity);
                     this.setDeltaMovement(deltaMovement.lerp(returnMotion, 0.2F));
                     if (this.isAlive() && this.distanceTo(living) <= 2.0F) {
-                        if (living instanceof ServerPlayer player) {
-                            player.getCooldowns().addCooldown(stack.getItem(), 30);
-                            DisabledItem.enableItem(player, this.getSlot());
-                        }
-                        this.level().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.IRON_GOLEM_REPAIR, SoundSource.NEUTRAL, 1.0F, SinewSoundUtils.randomizePitch(this.level()));
-                        this.discard();
+                        VibraniumShieldItem.catchShield(this, stack, living);
                     }
                 }
             }
@@ -234,7 +256,7 @@ public class VibraniumShield extends ThrowableItemProjectile {
 
     @Override
     protected void updateRotation() {
-        ProjectileUtil.rotateTowardsMovement(this, 0.5F);
+        ProjectileUtil.rotateTowardsMovement(this, 0.4F);
     }
 
     private void updateRollAndPitch() {
@@ -268,7 +290,7 @@ public class VibraniumShield extends ThrowableItemProjectile {
         } else {
             this.roll = 0.0F;
         }
-        this.pitch += (target - this.pitch) * 0.5F;
+        this.pitch += (target - this.pitch) * 0.4F;
     }
 
     public float getPitch(float partialTicks) {
@@ -290,11 +312,11 @@ public class VibraniumShield extends ThrowableItemProjectile {
     }
 
     private void playImpactSound(double x, double y, double z) {
-        this.level().playSound(null, x, y, z, SoundEvents.IRON_GOLEM_REPAIR, SoundSource.NEUTRAL, 1.0F, SinewSoundUtils.randomizePitch(this.level()));
+        this.level().playSound(null, x, y, z, HeroSoundEvents.VIBRANIUM_SHIELD_IMPACT, SoundSource.NEUTRAL, 1.0F, SinewSoundUtils.randomizePitch(this.level()));
     }
 
     public void flyBack(Entity owner) {
-        this.setRicochetCount(100);
+        this.setRicochetCount(MAX_BOUNCES * 2);
         this.setReturnTime(0);
         Vec3 ownerPos = owner.position().add(0.0F, owner.getBbHeight() * 0.5F, 0.0F);
         Vec3 returnMotion = ownerPos.subtract(this.position()).normalize().scale(0.8F);
