@@ -7,6 +7,9 @@ import com.platypushasnohat.mightiest_heroes.datagen.client.HeroSoundDefinitions
 import com.platypushasnohat.mightiest_heroes.datagen.server.HeroBlockTagsProvider;
 import com.platypushasnohat.mightiest_heroes.datagen.server.HeroItemTagsProvider;
 import com.platypushasnohat.mightiest_heroes.registry.*;
+import com.platypushasnohat.mightiest_heroes.utils.ClientProxy;
+import com.platypushasnohat.mightiest_heroes.utils.CommonProxy;
+import com.platypushasnohat.sinew.Sinew;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
@@ -25,6 +28,8 @@ import java.util.concurrent.CompletableFuture;
 public class MightiestHeroes {
 
     public static final String MOD_ID = "mightiest_heroes";
+
+    public static final CommonProxy PROXY = Sinew.unsafeRunForDist(() -> ClientProxy::new, () -> CommonProxy::new);
 
     public static ResourceLocation location(String path) {
         return ResourceLocation.fromNamespaceAndPath(MOD_ID, path.toLowerCase(Locale.ROOT));

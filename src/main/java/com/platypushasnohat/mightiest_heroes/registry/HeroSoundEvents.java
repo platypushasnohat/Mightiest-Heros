@@ -13,6 +13,8 @@ public class HeroSoundEvents {
     public static final DeferredHolder<SoundEvent, SoundEvent> VIBRANIUM_SHIELD_IMPACT = registerSoundEvent("vibranium_shield_impact");
     public static final DeferredHolder<SoundEvent, SoundEvent> VIBRANIUM_SHIELD_SWIPE = registerSoundEvent("vibranium_shield_swipe");
     public static final DeferredHolder<SoundEvent, SoundEvent> VIBRANIUM_SHIELD_CATCH = registerSoundEvent("vibranium_shield_catch");
+    public static final DeferredHolder<SoundEvent, SoundEvent> VIBRANIUM_SHIELD_BLOCK = registerSoundEvent("vibranium_shield_block");
+    public static final DeferredHolder<SoundEvent, SoundEvent> VIBRANIUM_SHIELD_LOOP = registerSoundEvent("vibranium_shield_loop");
 
     private static DeferredHolder<SoundEvent, SoundEvent> registerSoundEvent(String soundName) {
         return SOUND_EVENT.register(soundName, () -> SoundEvent.createVariableRangeEvent(MightiestHeroes.location(soundName)));

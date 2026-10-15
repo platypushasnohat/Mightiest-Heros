@@ -3,8 +3,12 @@
   "package": "com.platypushasnohat.mightiest_heroes.mixins",
   "compatibilityLevel": "JAVA_21",
   "refmap": "mightiest_heroes.refmap.json",
-  "mixins": [],
-  "client": [],
+  "mixins": [
+    "LivingEntityMixin"
+  ],
+  "client": [
+    "client.LocalPlayerMixin"
+  ],
   "injectors": {
     "defaultRequire": 1
   },

@@ -17,6 +17,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Inventory;
@@ -63,17 +64,26 @@ public class VibraniumShieldItem extends Item implements Equipable {
             VibraniumShield shield = new VibraniumShield(level, player);
             shield.setOwner(player);
             shield.setItem(stack);
-            shield.setReturnTime(THROWN_SHIELD_RETURN_TIME);
-            float extraDamage = Math.round((float) player.getAttributeValue(Attributes.ATTACK_DAMAGE));
-            shield.setDamage(BASE_THROWN_SHIELD_DAMAGE + extraDamage);
             shield.setSlot(slot);
+            shield.setReturnTime(THROWN_SHIELD_RETURN_TIME);
+            shield.setDamage(BASE_THROWN_SHIELD_DAMAGE + this.getBaseThrownShieldDamage(player));
             shield.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 1.5F, 0.0F);
             level.addFreshEntity(shield);
+            level.playSound(null, shield.blockPosition(), HeroSoundEvents.VIBRANIUM_SHIELD_SWIPE.get(), SoundSource.PLAYERS, 1.0F, 1.25F * SinewSoundUtils.randomizePitch(level));
             if (player instanceof ServerPlayer serverPlayer) {
                 DisabledItem.disableItem(serverPlayer, slot, HeroItems.DISABLED_VIBRANIUM_SHIELD);
             }
-            level.playSound(null, shield.blockPosition(), HeroSoundEvents.VIBRANIUM_SHIELD_SWIPE.get(), SoundSource.PLAYERS, 1.0F, 1.25F * SinewSoundUtils.randomizePitch(level));
         }
+    }
+
+    private float getBaseThrownShieldDamage(Player player) {
+        AttributeInstance attribute = player.getAttribute(Attributes.ATTACK_DAMAGE);
+        AttributeModifier itemModifier = null;
+        if (attribute != null) {
+            itemModifier = attribute.getModifier(BASE_ATTACK_DAMAGE_ID);
+        }
+        double itemDamage = itemModifier != null ? itemModifier.amount() : 0.0D;
+        return Math.round((float) player.getAttributeValue(Attributes.ATTACK_DAMAGE) - itemDamage);
     }
 
     public static void catchShield(VibraniumShield shield, ItemStack stack, LivingEntity owner) {

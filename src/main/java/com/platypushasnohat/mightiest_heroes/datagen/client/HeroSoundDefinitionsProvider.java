@@ -19,15 +19,21 @@ public class HeroSoundDefinitionsProvider extends SinewSoundDefinitionsProvider 
                 sound(MightiestHeroes.location("entity/vibranium_shield/impact2")),
                 sound(MightiestHeroes.location("entity/vibranium_shield/impact3"))
         );
-
         this.registerSound(HeroSoundEvents.VIBRANIUM_SHIELD_SWIPE,
                 sound(MightiestHeroes.location("entity/vibranium_shield/swipe1")),
                 sound(MightiestHeroes.location("entity/vibranium_shield/swipe2")),
                 sound(MightiestHeroes.location("entity/vibranium_shield/swipe3"))
         );
-
         this.registerSound(HeroSoundEvents.VIBRANIUM_SHIELD_CATCH,
                 sound(MightiestHeroes.location("entity/vibranium_shield/catch"))
+        );
+        this.registerSound(HeroSoundEvents.VIBRANIUM_SHIELD_BLOCK,
+                sound(MightiestHeroes.location("entity/vibranium_shield/block1")),
+                sound(MightiestHeroes.location("entity/vibranium_shield/block2")),
+                sound(MightiestHeroes.location("entity/vibranium_shield/block3"))
+        );
+        this.registerSound(HeroSoundEvents.VIBRANIUM_SHIELD_LOOP,
+                sound(MightiestHeroes.location("entity/vibranium_shield/loop"))
         );
     }
 }

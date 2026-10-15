@@ -31,5 +31,9 @@ public class HeroLanguageProvider extends SinewLanguageProvider {
         this.add(HeroBlocks.VIBRANIUM_BLOCK.get(), "Block of Vibranium");
         this.add(HeroBlocks.RAW_VIBRANIUM_BLOCK.get(), "Block of Raw Vibranium");
 
+        this.add("death.attack.vibranium_shield_0", "%s was sliced in half");
+        this.add("death.attack.vibranium_shield_1", "%s was bisected");
+        this.add("death.attack.vibranium_shield_0.entity", "%s was sliced in half by %s");
+        this.add("death.attack.vibranium_shield_1.entity", "%s was bisected by %s");
     }
 }

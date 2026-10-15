@@ -1,9 +1,12 @@
 package com.platypushasnohat.mightiest_heroes.entity;
 
+import com.platypushasnohat.mightiest_heroes.MightiestHeroes;
 import com.platypushasnohat.mightiest_heroes.items.VibraniumShieldItem;
+import com.platypushasnohat.mightiest_heroes.registry.HeroDamageTypes;
 import com.platypushasnohat.mightiest_heroes.registry.HeroEntities;
 import com.platypushasnohat.mightiest_heroes.registry.HeroItems;
 import com.platypushasnohat.mightiest_heroes.registry.HeroSoundEvents;
+import com.platypushasnohat.mightiest_heroes.utils.ClientProxy;
 import com.platypushasnohat.sinew.utils.SinewSoundUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
@@ -37,6 +40,7 @@ public class VibraniumShield extends ThrowableItemProjectile {
     private static final EntityDataAccessor<Integer> RICOCHET_COUNT = SynchedEntityData.defineId(VibraniumShield.class, EntityDataSerializers.INT);
 
     private static final int MAX_BOUNCES = 3;
+    private static final double MIN_BOUNCE_RANGE = 3.0D;
 
     public AnimationState projectileAnimationState = new AnimationState();
 
@@ -171,7 +175,7 @@ public class VibraniumShield extends ThrowableItemProjectile {
         ItemStack stack = this.getItem();
         Vec3 deltaMovement = this.getDeltaMovement();
         Vec3 ownerPos = new Vec3(living.getX(), living.getEyeY() - 0.1F, living.getZ());
-        double velocity = Mth.clamp(deltaMovement.length() * 3.0D, 0.75F, 1.5F);
+        double velocity = Mth.clamp(deltaMovement.length() * 3.0D, 0.5F, 1.5F);
         Vec3 returnMotion = ownerPos.subtract(this.position()).normalize().scale(velocity);
         this.setDeltaMovement(deltaMovement.lerp(returnMotion, 0.2F));
         if (this.isAlive() && this.distanceTo(living) <= 2.0F) {
@@ -214,10 +218,11 @@ public class VibraniumShield extends ThrowableItemProjectile {
 
     private void ricochet() {
         Entity owner = this.getOwner();
-        AABB searchBox = this.getBoundingBox().inflate(12.0D, 4.0D, 12.0D);
+        double bounceDistance = 9.0D;
+        AABB searchBox = this.getBoundingBox().inflate(bounceDistance, 4.0D, bounceDistance);
         Entity ricochetTo = null;
         for (LivingEntity living : this.level().getEntitiesOfClass(LivingEntity.class, searchBox)) {
-            if (this.hasLineOfSight(living) && this.canHitEntity(owner, living) && living.distanceTo(this) > 3.0D) {
+            if (this.hasLineOfSight(living) && this.canHitEntity(owner, living) && living.distanceTo(this) > MIN_BOUNCE_RANGE) {
                 ricochetTo = living;
                 break;
             }
@@ -239,15 +244,15 @@ public class VibraniumShield extends ThrowableItemProjectile {
         }
     }
 
-    private void applyKnockbackEffects(LivingEntity target, DamageSource damageSource) {
-        double x = this.position().x - target.getX();
-        double z = this.position().z - target.getZ();
-        float knockbackStrength = 0.0F;
-        if (this.level() instanceof ServerLevel serverLevel) {
-            knockbackStrength = EnchantmentHelper.modifyKnockback(serverLevel, this.getItem(), target, damageSource, knockbackStrength);
+    public static void applyKnockbackEffects(Entity source, Entity target, ItemStack itemStack, DamageSource damageSource, float baseStrength) {
+        double x = source.position().x - target.getX();
+        double z = source.position().z - target.getZ();
+        float knockbackStrength = baseStrength;
+        if (source.level() instanceof ServerLevel serverLevel) {
+            knockbackStrength = EnchantmentHelper.modifyKnockback(serverLevel, itemStack, target, damageSource, knockbackStrength);
         }
-        if (knockbackStrength > 0.0F) {
-            target.knockback(knockbackStrength, x, z);
+        if (knockbackStrength > 0.0F && target instanceof LivingEntity living) {
+            living.knockback(knockbackStrength, x, z);
         }
     }
 
@@ -268,7 +273,7 @@ public class VibraniumShield extends ThrowableItemProjectile {
 
     @Override
     public float getPickRadius() {
-        return 2.0F;
+        return 4.0F;
     }
 
     @Override
@@ -281,18 +286,24 @@ public class VibraniumShield extends ThrowableItemProjectile {
     }
 
     @Override
+    public void remove(RemovalReason reason) {
+        MightiestHeroes.PROXY.clearSoundCacheFor(this);
+        super.remove(reason);
+    }
+
+    @Override
     protected void onHitEntity(EntityHitResult result) {
         Entity target = result.getEntity();
         Entity owner = this.getOwner();
-        if (!this.level().isClientSide && owner instanceof LivingEntity living && this.canHitEntity(living, target)) {
-            DamageSource damageSource = this.damageSources().mobProjectile(this, living);
+        if (!this.level().isClientSide && this.canHitEntity(owner, target)) {
+            DamageSource damageSource = HeroDamageTypes.causeVibraniumShieldDamage(this.level().registryAccess(), owner);
             float damage = this.getDamage();
             if (this.level() instanceof ServerLevel serverLevel) {
                 damage = EnchantmentHelper.modifyDamage(serverLevel, this.getItem(), target, damageSource, damage);
             }
             if (target.hurt(damageSource, damage)) {
                 if (target instanceof LivingEntity livingTarget) {
-                    this.applyKnockbackEffects(livingTarget, damageSource);
+                    applyKnockbackEffects(this, livingTarget, this.getItem(), damageSource, 0.0F);
                 }
                 if (this.level() instanceof ServerLevel serverLevel) {
                     EnchantmentHelper.doPostAttackEffectsWithItemSource(serverLevel, target, damageSource, this.getItem());
@@ -352,6 +363,7 @@ public class VibraniumShield extends ThrowableItemProjectile {
             }
         } else {
             this.updatePitchAndRoll();
+            MightiestHeroes.PROXY.playSound(this, ClientProxy.VIBRANIUM_SHIELD_SOUND);
             this.projectileAnimationState.animateWhen(this.isAlive(), this.tickCount);
         }
     }
