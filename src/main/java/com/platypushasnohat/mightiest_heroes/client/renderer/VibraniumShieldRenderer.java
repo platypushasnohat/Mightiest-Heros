@@ -33,6 +33,7 @@ public class VibraniumShieldRenderer extends EntityRenderer<VibraniumShield> {
             poseStack.pushPose();
             poseStack.scale(-1.0F, -1.0F, 1.0F);
             poseStack.translate(0.0F, -1.501F, 0.0F);
+            poseStack.translate(0.0F, -entity.getBbHeight() / 2, 0.0F);
             float ageInTicks = (float) entity.tickCount + partialTicks;
             VertexConsumer consumer = ItemRenderer.getFoilBufferDirect(bufferSource, this.model.renderType(TEXTURE_LOCATION), false, entity.getItem().hasFoil());
             this.model.setupAnim(entity, 0.0F, 0.0F, ageInTicks, 0.0F, 0.0F);
