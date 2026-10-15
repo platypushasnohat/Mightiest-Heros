@@ -3,6 +3,7 @@ package com.platypushasnohat.mightiest_heroes.datagen.client;
 import com.platypushasnohat.mightiest_heroes.MightiestHeroes;
 import com.platypushasnohat.mightiest_heroes.MightiestHeroesTab;
 import com.platypushasnohat.mightiest_heroes.registry.HeroBlocks;
+import com.platypushasnohat.mightiest_heroes.registry.HeroEntities;
 import com.platypushasnohat.mightiest_heroes.registry.HeroItems;
 import com.platypushasnohat.mightiest_heroes.registry.HeroSoundEvents;
 import com.platypushasnohat.sinew.datagen.client.SinewLanguageProvider;
@@ -19,6 +20,7 @@ public class HeroLanguageProvider extends SinewLanguageProvider {
         this.addCreativeTab(MightiestHeroesTab.MIGHTIEST_HEROES_TAB.get(), "Mightiest Heroes");
         HeroItems.ITEM_TRANSLATIONS.forEach(this::forItem);
         HeroBlocks.BLOCK_TRANSLATIONS.forEach(this::forBlock);
+        HeroEntities.ENTITY_TRANSLATIONS.forEach(this::forEntity);
 
         this.addSound(HeroSoundEvents.VIBRANIUM_SHIELD_IMPACT, "Vibranium Shield impacts");
         this.addSound(HeroSoundEvents.VIBRANIUM_SHIELD_SWIPE, "Vibranium Shield swipes");

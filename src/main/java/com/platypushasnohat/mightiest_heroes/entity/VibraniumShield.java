@@ -12,6 +12,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
@@ -20,6 +21,7 @@ import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
@@ -237,6 +239,23 @@ public class VibraniumShield extends ThrowableItemProjectile {
         }
     }
 
+    private void applyKnockbackEffects(LivingEntity target, DamageSource damageSource) {
+        double x = this.position().x - target.getX();
+        double z = this.position().z - target.getZ();
+        float knockbackStrength = 0.0F;
+        if (this.level() instanceof ServerLevel serverLevel) {
+            knockbackStrength = EnchantmentHelper.modifyKnockback(serverLevel, this.getItem(), target, damageSource, knockbackStrength);
+        }
+        if (knockbackStrength > 0.0F) {
+            target.knockback(knockbackStrength, x, z);
+        }
+    }
+
+    private void hitBlockEnchantmentEffects(ServerLevel level, BlockHitResult hitResult, ItemStack stack) {
+        Vec3 locationWithin = hitResult.getBlockPos().clampLocationWithin(hitResult.getLocation());
+        EnchantmentHelper.onHitBlock(level, stack, this.getOwner() instanceof LivingEntity livingentity ? livingentity : null, this, null, locationWithin, level.getBlockState(hitResult.getBlockPos()), item -> this.getItem());
+    }
+
     @Override
     protected Item getDefaultItem() {
         return HeroItems.VIBRANIUM_SHIELD.get();
@@ -267,7 +286,17 @@ public class VibraniumShield extends ThrowableItemProjectile {
         Entity owner = this.getOwner();
         if (!this.level().isClientSide && owner instanceof LivingEntity living && this.canHitEntity(living, target)) {
             DamageSource damageSource = this.damageSources().mobProjectile(this, living);
-            if (target.hurt(damageSource, this.getDamage())) {
+            float damage = this.getDamage();
+            if (this.level() instanceof ServerLevel serverLevel) {
+                damage = EnchantmentHelper.modifyDamage(serverLevel, this.getItem(), target, damageSource, damage);
+            }
+            if (target.hurt(damageSource, damage)) {
+                if (target instanceof LivingEntity livingTarget) {
+                    this.applyKnockbackEffects(livingTarget, damageSource);
+                }
+                if (this.level() instanceof ServerLevel serverLevel) {
+                    EnchantmentHelper.doPostAttackEffectsWithItemSource(serverLevel, target, damageSource, this.getItem());
+                }
                 this.playImpactSound(target.getX(), target.getY(), target.getZ());
                 this.ricochet();
             }
@@ -282,6 +311,9 @@ public class VibraniumShield extends ThrowableItemProjectile {
         BlockState state = this.level().getBlockState(pos);
         if (this.getOwner() != null) {
             this.ricochet();
+        }
+        if (this.level() instanceof ServerLevel serverlevel) {
+            this.hitBlockEnchantmentEffects(serverlevel, result, this.getItem());
         }
         this.spawnBlockParticles(pos, state);
         this.playImpactSound(pos.getX(), pos.getY(), pos.getZ());
