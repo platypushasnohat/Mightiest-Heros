@@ -49,19 +49,19 @@ public class GoblinArmorModel extends HumanoidModel<LivingEntity> {
         helmet3.addOrReplaceChild("helmet4", CubeListBuilder.create().texOffs(120, 98).addBox(-1.0F, 0.0F, -1.0F, 2.0F, 8.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 12.0F, 0.0F));
 
         body.addOrReplaceChild("chestplate", CubeListBuilder.create().texOffs(92, 80).addBox(-4.0F, 0.0F, -2.0F, 8.0F, 12.0F, 4.0F, new CubeDeformation(0.25F))
-                .texOffs(64, 96).addBox(-4.0F, 0.0F, -2.0F, 8.0F, 12.0F, 4.0F, new CubeDeformation(0.5F)), PartPose.ZERO);
+                .texOffs(64, 96).addBox(-4.0F, 0.0F, -2.0F, 8.0F, 12.0F, 4.0F, new CubeDeformation(0.26F)), PartPose.ZERO);
 
-        leftArm.addOrReplaceChild("left_pauldron", CubeListBuilder.create().texOffs(64, 112).addBox(-2.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.26F))
-                .texOffs(88, 96).addBox(-2.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.51F)), PartPose.ZERO);
+        leftArm.addOrReplaceChild("left_pauldron", CubeListBuilder.create().texOffs(64, 112).addBox(-0.75F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.27F))
+                .texOffs(88, 96).addBox(-0.75F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.3F)), PartPose.ZERO);
 
-        rightArm.addOrReplaceChild("right_pauldron", CubeListBuilder.create().texOffs(64, 112).mirror().addBox(-2.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.26F)).mirror(false)
-                .texOffs(88, 96).mirror().addBox(-2.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.51F)).mirror(false), PartPose.ZERO);
+        rightArm.addOrReplaceChild("right_pauldron", CubeListBuilder.create().texOffs(64, 112).mirror().addBox(-3.25F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.27F)).mirror(false)
+                .texOffs(88, 96).mirror().addBox(-3.25F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.3F)).mirror(false), PartPose.ZERO);
 
         leftLeg.addOrReplaceChild("left_legging", CubeListBuilder.create().texOffs(112, 64).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.25F))
-                .texOffs(96, 64).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.5F)), PartPose.ZERO);
+                .texOffs(96, 64).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.28F)), PartPose.ZERO);
 
         rightLeg.addOrReplaceChild("right_legging", CubeListBuilder.create().texOffs(112, 64).mirror().addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.26F)).mirror(false)
-                .texOffs(96, 64).mirror().addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.51F)).mirror(false), PartPose.ZERO);
+                .texOffs(96, 64).mirror().addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.29F)).mirror(false), PartPose.ZERO);
 
         return LayerDefinition.create(meshdefinition, 128, 128);
     }
