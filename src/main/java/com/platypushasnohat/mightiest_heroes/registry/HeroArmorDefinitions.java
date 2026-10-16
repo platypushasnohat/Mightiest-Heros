@@ -16,4 +16,11 @@ public class HeroArmorDefinitions {
             .texture(slot -> slot == EquipmentSlot.LEGS ? MightiestHeroes.location("textures/models/armor/super_soldier_layer_2.png") : MightiestHeroes.location("textures/models/armor/super_soldier_layer_1.png"))
             .build();
 
+    public static final ArmorDefinition GOBLIN = new ArmorDefinition.Builder()
+            .material(HeroArmorMaterials.GOBLIN)
+            .attribute(Attributes.MAX_HEALTH, 3.0F, AttributeModifier.Operation.ADD_VALUE)
+            .attribute(Attributes.ATTACK_DAMAGE, 1.0F, AttributeModifier.Operation.ADD_VALUE)
+            .texture(slot -> slot == EquipmentSlot.LEGS ? MightiestHeroes.location("textures/models/armor/goblin_layer_2.png") : MightiestHeroes.location("textures/models/armor/goblin_layer_1.png"))
+            .build();
+
 }

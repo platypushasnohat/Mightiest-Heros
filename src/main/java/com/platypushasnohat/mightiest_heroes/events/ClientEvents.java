@@ -1,6 +1,7 @@
 package com.platypushasnohat.mightiest_heroes.events;
 
 import com.platypushasnohat.mightiest_heroes.MightiestHeroes;
+import com.platypushasnohat.mightiest_heroes.client.models.GoblinArmorModel;
 import com.platypushasnohat.mightiest_heroes.client.models.SuperSoldierArmorModel;
 import com.platypushasnohat.mightiest_heroes.client.models.VibraniumShieldModel;
 import com.platypushasnohat.mightiest_heroes.client.renderer.VibraniumShieldItemRenderer;
@@ -38,6 +39,13 @@ public class ClientEvents {
                 return SuperSoldierArmorModel.INSTANCE;
             }
         }, HeroItems.SUPER_SOLDIER_MASK, HeroItems.SUPER_SOLDIER_CHESTPLATE, HeroItems.SUPER_SOLDIER_LEGGINGS, HeroItems.SUPER_SOLDIER_BOOTS);
+
+        event.registerItem(new IClientItemExtensions() {
+            @Override
+            public HumanoidModel<?> getHumanoidArmorModel(LivingEntity entity, ItemStack stack, EquipmentSlot slot, HumanoidModel<?> properties) {
+                return GoblinArmorModel.INSTANCE;
+            }
+        }, HeroItems.GOBLIN_MASK, HeroItems.GOBLIN_CHESTPLATE, HeroItems.GOBLIN_LEGGINGS, HeroItems.GOBLIN_BOOTS);
     }
 
     @SubscribeEvent

@@ -35,16 +35,20 @@ public class HeroItemTagsProvider extends ItemTagsProvider {
 		);
 
 		this.tag(ItemTags.HEAD_ARMOR).add(
-				HeroItems.SUPER_SOLDIER_MASK.get()
+				HeroItems.SUPER_SOLDIER_MASK.get(),
+				HeroItems.GOBLIN_MASK.get()
 		);
 		this.tag(ItemTags.CHEST_ARMOR).add(
-				HeroItems.SUPER_SOLDIER_CHESTPLATE.get()
+				HeroItems.SUPER_SOLDIER_CHESTPLATE.get(),
+				HeroItems.GOBLIN_CHESTPLATE.get()
 		);
 		this.tag(ItemTags.LEG_ARMOR).add(
-				HeroItems.SUPER_SOLDIER_LEGGINGS.get()
+				HeroItems.SUPER_SOLDIER_LEGGINGS.get(),
+				HeroItems.GOBLIN_LEGGINGS.get()
 		);
 		this.tag(ItemTags.FOOT_ARMOR).add(
-				HeroItems.SUPER_SOLDIER_BOOTS.get()
+				HeroItems.SUPER_SOLDIER_BOOTS.get(),
+				HeroItems.GOBLIN_BOOTS.get()
 		);
 
 		this.tag(Tags.Items.TOOLS_SHIELD).add(

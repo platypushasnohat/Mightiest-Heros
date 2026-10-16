@@ -21,6 +21,7 @@ public class HeroArmorMaterials {
     public static final DeferredRegister<ArmorMaterial> ARMOR_MATERIALS = DeferredRegister.create(Registries.ARMOR_MATERIAL, MightiestHeroes.MOD_ID);
 
     public static final DeferredHolder<ArmorMaterial, ArmorMaterial> SUPER_SOLDIER = register("super_soldier", defense(2, 5, 6, 2, 10), 16, SoundEvents.ARMOR_EQUIP_GENERIC, 2.0F, 0.0F, () -> Ingredient.of(HeroItems.VIBRANIUM_INGOT));
+    public static final DeferredHolder<ArmorMaterial, ArmorMaterial> GOBLIN = register("goblin", defense(2, 5, 6, 2, 10), 16, SoundEvents.ARMOR_EQUIP_GENERIC, 2.0F, 0.0F, () -> Ingredient.of(HeroItems.VIBRANIUM_INGOT));
 
     public static EnumMap<ArmorItem.Type, Integer> defense(int boots, int leggings, int chestplate, int helmet, int body) {
         return Util.make(new EnumMap<>(ArmorItem.Type.class), map -> {

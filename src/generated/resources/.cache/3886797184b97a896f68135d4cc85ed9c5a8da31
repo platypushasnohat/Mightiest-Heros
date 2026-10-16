@@ -1,5 +1,9 @@
-// 1.21.1	2026-10-13T15:11:11.0563455	Item Models: mightiest_heroes
+// 1.21.1	2026-10-15T18:52:15.4901491	Item Models: mightiest_heroes
 8ddcb9ba82ea1ab1eb8643125752e8c28144d704 assets/mightiest_heroes/models/item/disabled_vibranium_shield.json
+be17861b69f8f6d1d6118be873ae04338c91bd27 assets/mightiest_heroes/models/item/goblin_boots.json
+1aaf5181235f3fcb899b0243ff5ee3948b79a04b assets/mightiest_heroes/models/item/goblin_chestplate.json
+cbde86edd39a8da0b09e2c8f095a974f92d8cfd5 assets/mightiest_heroes/models/item/goblin_leggings.json
+f6821a76afc3558668388d6103c5ed95520255a8 assets/mightiest_heroes/models/item/goblin_mask.json
 32d56910bac06c883d928b9be07635ad3492225e assets/mightiest_heroes/models/item/raw_vibranium.json
 504f3ff265e92e1264401dffbc8c74970cf87c1d assets/mightiest_heroes/models/item/super_soldier_boots.json
 990c774348a7e2d35fc3955107a2c591ec64b63b assets/mightiest_heroes/models/item/super_soldier_chestplate.json
