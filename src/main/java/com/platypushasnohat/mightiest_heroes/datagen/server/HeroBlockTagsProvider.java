@@ -26,5 +26,12 @@ public class HeroBlockTagsProvider extends BlockTagsProvider {
                 HeroBlocks.VIBRANIUM_BLOCK.get(),
                 HeroBlocks.RAW_VIBRANIUM_BLOCK.get()
         );
+
+        this.tag(BlockTags.NEEDS_DIAMOND_TOOL).add(
+                HeroBlocks.DEEPSLATE_VIBRANIUM_ORE.get(),
+                HeroBlocks.VIBRANIUM_ORE.get(),
+                HeroBlocks.VIBRANIUM_BLOCK.get(),
+                HeroBlocks.RAW_VIBRANIUM_BLOCK.get()
+        );
     }
 }
