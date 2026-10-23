@@ -30,10 +30,10 @@ public class MightiestHeroesTab {
                         output.accept(HeroItems.SUPER_SOLDIER_BOOTS.get());
                         output.accept(HeroItems.VIBRANIUM_SHIELD.get());
 
-                        output.accept(HeroItems.GOBLIN_MASK.get());
-                        output.accept(HeroItems.GOBLIN_CHESTPLATE.get());
-                        output.accept(HeroItems.GOBLIN_LEGGINGS.get());
-                        output.accept(HeroItems.GOBLIN_BOOTS.get());
+//                        output.accept(HeroItems.GOBLIN_MASK.get());
+//                        output.accept(HeroItems.GOBLIN_CHESTPLATE.get());
+//                        output.accept(HeroItems.GOBLIN_LEGGINGS.get());
+//                        output.accept(HeroItems.GOBLIN_BOOTS.get());
                     })
                     .build());
 

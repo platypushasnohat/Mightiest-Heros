@@ -4,6 +4,7 @@ import com.platypushasnohat.mightiest_heroes.entity.VibraniumShield;
 import com.platypushasnohat.mightiest_heroes.registry.HeroItems;
 import com.platypushasnohat.mightiest_heroes.registry.HeroSoundEvents;
 import com.platypushasnohat.sinew.item.DisabledItem;
+import com.platypushasnohat.sinew.item.MovementModifyingItem;
 import com.platypushasnohat.sinew.utils.SinewSoundUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
@@ -34,7 +35,7 @@ import net.neoforged.neoforge.common.ItemAbility;
 
 import java.util.List;
 
-public class VibraniumShieldItem extends Item implements Equipable {
+public class VibraniumShieldItem extends Item implements Equipable, MovementModifyingItem {
 
     private static final float BASE_THROWN_SHIELD_DAMAGE = 6.0F;
     private static final int THROWN_SHIELD_RETURN_TIME = 20;
@@ -170,5 +171,15 @@ public class VibraniumShieldItem extends Item implements Equipable {
     @Override
     public boolean canPerformAction(ItemStack stack, ItemAbility itemAbility) {
         return ItemAbilities.DEFAULT_SHIELD_ACTIONS.contains(itemAbility) || ItemAbilities.DEFAULT_SWORD_ACTIONS.contains(itemAbility);
+    }
+
+    @Override
+    public float getUseMovementMultiplier() {
+        return 0.5F;
+    }
+
+    @Override
+    public boolean canSprintWhileUsing() {
+        return false;
     }
 }

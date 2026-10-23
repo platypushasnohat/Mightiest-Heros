@@ -6,9 +6,7 @@
   "mixins": [
     "LivingEntityMixin"
   ],
-  "client": [
-    "client.LocalPlayerMixin"
-  ],
+  "client": [],
   "injectors": {
     "defaultRequire": 1
   },
